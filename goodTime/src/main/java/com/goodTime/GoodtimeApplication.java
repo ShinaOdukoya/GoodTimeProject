@@ -1,4 +1,4 @@
-package com.GoodTime.goodtime;
+package com.goodTime;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
