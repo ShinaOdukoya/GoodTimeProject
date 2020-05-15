@@ -65,7 +65,7 @@ public class User {
 	
 	@Column(name= "lastLogin")
 	private LocalDateTime lastLogIn;
-	
+		
 	@CreationTimestamp
 	@Column(name = "joinedAt")
 	private LocalDateTime joinedAt;

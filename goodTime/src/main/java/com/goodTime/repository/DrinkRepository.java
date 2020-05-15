@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import com.goodTime.demainobject.DrinkResponseObject;
 import com.goodTime.model.Drink;
-import com.goodTime.model.User;
 
 
 @Repository
