@@ -1,5 +1,6 @@
 package com.goodTime.serviceImplementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.goodTime.exception.BadRequestException;
 import com.goodTime.exception.NotFoundException;
+import com.goodTime.model.Movie;
 import com.goodTime.model.User;
+import com.goodTime.repository.MovieRepository;
 import com.goodTime.repository.UserRepository;
 import com.goodTime.service.UserService;
 
@@ -18,6 +21,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private MovieRepository movieRepository;
 	
 	
 	// Registers new users
@@ -70,4 +76,40 @@ public class UserServiceImpl implements UserService{
 	public void sendConfirmationMail(User user) {
 		
 	}
+	
+	@Override
+	public User createMoviePlayList(UUID userId, Long id){
+		
+		
+		User user = userRepository.getOne(userId);
+		
+		List<Movie> movieplaylist = new ArrayList<>();
+		
+		if(movieRepository.existsById(id)) {
+			
+			
+			List<Movie> allMovies = movieRepository.findAll();
+			for (Movie movie : allMovies ) {
+				
+				movieplaylist.add(movie);
+				
+			}
+
+				user.setMovies(movieplaylist);
+				
+				
+			
+		}
+		
+		
+		
+		
+		return userRepository.save(user);
+		
+		
+		
+	
+		
+	}
+
 }

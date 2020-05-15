@@ -1,5 +1,6 @@
 package com.goodTime.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	
 	User findByBusinessName(String businessName);
 	User findByEmailAddress(String emailAddress);
+	
 }

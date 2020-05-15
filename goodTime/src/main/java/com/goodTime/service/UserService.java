@@ -14,4 +14,5 @@ public interface UserService {
 	User findUserByEmailAddress(String emailAddress);
 	User findUserById(UUID id);
 	List<User> findAllUsers();
+	User createMoviePlayList(UUID user_id, Long id);
 }

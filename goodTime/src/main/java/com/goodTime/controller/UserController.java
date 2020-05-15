@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +31,11 @@ public class UserController {
 	public ResponseEntity<Object> registerNewClient(@RequestBody @Valid User user) {
 		userService.registerUser(user);
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
+	}
+	
+	@PutMapping("/{id}/{movie_id}")
+	public ResponseEntity<User> createMoviePlayList(@PathVariable("id") UUID id, @PathVariable("movie_id") Long movie_id){
+		return new ResponseEntity <User> (userService.createMoviePlayList(id, movie_id), HttpStatus.OK);
 	}
 	
 	@GetMapping("/")
