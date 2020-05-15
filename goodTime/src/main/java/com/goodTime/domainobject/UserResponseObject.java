@@ -1,4 +1,4 @@
-package com.goodTime.demainobject;
+package com.goodTime.domainobject;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

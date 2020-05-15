@@ -3,6 +3,8 @@ package com.goodTime.serviceImplementation;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.goodTime.exception.NotFoundException;
 import com.goodTime.model.Message;
 import com.goodTime.repository.MessageRepository;
 import com.goodTime.repository.UserRepository;
@@ -20,18 +22,21 @@ public class MessageServiceImpl implements MessageService{
 
 	@Override
 	public void createMessage(Message message) {
-		message.setUser(userRepository.findByEmailAddress("adetosine61@gmail.com"));
+		message.setUser(userRepository.findByEmailAddress("adetosine6@gmail.com"));
 		messageRepository.save(message);	
 	}
 
 	@Override
 	public void deleteMessage(long id) {
+		findMessageById(id);
 		messageRepository.deleteById(id);
 	}
 
 	@Override
-	public Message findMessage(long id) {
-		return messageRepository.findById(id).get();
+	public Message findMessageById(long id) {
+		return messageRepository
+				.findById(id)
+				.orElseThrow(() -> new NotFoundException("User with ID "+id+" does not exist!"));
 	}
 
 	@Override
@@ -41,7 +46,9 @@ public class MessageServiceImpl implements MessageService{
 
 	@Override
 	public List<Message> findAllMessages(){
+		if(messageRepository.findAll().isEmpty()) {
+			throw new NotFoundException("Message table is empty!");
+		}
 		return messageRepository.findAll();
 	}
-
 }

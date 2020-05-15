@@ -37,7 +37,7 @@ public class MessageController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Message> getMessage(@PathVariable("id") long id){
-		Message message = messageService.findMessage(id);
+		Message message = messageService.findMessageById(id);
 		return new ResponseEntity<Message>(message, HttpStatus.OK);
 	}
 	

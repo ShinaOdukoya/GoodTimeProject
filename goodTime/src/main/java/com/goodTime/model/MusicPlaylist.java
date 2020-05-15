@@ -25,12 +25,9 @@ public class MusicPlaylist {
 	
 	@Column(name="name", unique=true)
 	private String name;
-		
-	@Column(name="artist")
-	private String artist;
 	
 	@Column(name="rating")
-	private String rating;
+	private int rating;
 	
 	@ManyToMany
 	private Collection<Music> music = new ArrayList<Music>();
@@ -61,23 +58,15 @@ public class MusicPlaylist {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getArtist() {
-		return artist;
-	}
-
-	public void setArtist(String artist) {
-		this.artist = artist;
-	}
-
-	public String getRating() {
+	
+	public int getRating() {
 		return rating;
 	}
 
-	public void setRating(String rating) {
+	public void setRating(int rating) {
 		this.rating = rating;
 	}
-	
+
 	public Collection<Music> getMusic() {
 		return music;
 	}

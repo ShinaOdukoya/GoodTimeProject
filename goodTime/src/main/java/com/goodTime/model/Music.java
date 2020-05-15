@@ -1,15 +1,11 @@
 package com.goodTime.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,9 +27,6 @@ public class Music {
 	
 	@Column(name="album")
 	private String album;
-	
-	@ManyToMany
-	private Collection<MusicPlaylist> playlist = new ArrayList<MusicPlaylist>();
 	
 	@CreationTimestamp
 	@Column(name = "createdDate")
@@ -73,14 +66,6 @@ public class Music {
 
 	public void setAlbum(String album) {
 		this.album = album;
-	}
-	
-	public Collection<MusicPlaylist> getPlaylist() {
-		return playlist;
-	}
-
-	public void setPlaylist(Collection<MusicPlaylist> playlist) {
-		this.playlist = playlist;
 	}
 
 	public LocalDateTime getCreatedDate() {

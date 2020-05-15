@@ -12,20 +12,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.goodTime.model.Music;
 import com.goodTime.model.MusicPlaylist;
 import com.goodTime.serviceImplementation.MusicPlaylistServiceImpl;
+import com.goodTime.serviceImplementation.MusicServiceImpl;
 
 @RestController
-@RequestMapping("api/music")
+@RequestMapping("api/music-playlist")
 public class MusicPlaylistController {
 	
 	@Autowired
 	private MusicPlaylistServiceImpl musicPlaylistService;
 	
+	@Autowired
+	private MusicServiceImpl musicService;
+	
 	@PostMapping("/")
-	private ResponseEntity<MusicPlaylist> createMusic(@RequestBody MusicPlaylist playlist){
+	private ResponseEntity<MusicPlaylist> createPlaylist(@RequestBody MusicPlaylist playlist){
 		musicPlaylistService.createPlaylist(playlist);
 		return new ResponseEntity<MusicPlaylist>(playlist, HttpStatus.CREATED) ;
 	}
@@ -38,7 +44,7 @@ public class MusicPlaylistController {
 	
 	@GetMapping("/{id}")
 	private ResponseEntity<MusicPlaylist> getPlaylist(@PathVariable("id") long id){
-		MusicPlaylist playlist = musicPlaylistService.getPlaylist(id);
+		MusicPlaylist playlist = musicPlaylistService.getPlaylistById(id);
 		return new ResponseEntity<MusicPlaylist>(playlist, HttpStatus.OK) ;
 	}
 	
@@ -51,6 +57,15 @@ public class MusicPlaylistController {
 	@DeleteMapping("/{id}")
 	private ResponseEntity<MusicPlaylist> deletePlaylist(@PathVariable("id") long id){
 		musicPlaylistService.deletePlaylist(id);
-		return new ResponseEntity<MusicPlaylist>(HttpStatus.OK) ;
+		return new ResponseEntity<MusicPlaylist>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/add-music")
+	private ResponseEntity<MusicPlaylist> addSong(@RequestParam("playlistId") long playlistId, @RequestParam("musicId") long musicId){
+		MusicPlaylist playlist = musicPlaylistService.getPlaylistById(playlistId);
+		Music music = musicService.getMusicById(musicId);
+		
+		musicPlaylistService.addMusic(playlist, music);
+		return new ResponseEntity<MusicPlaylist>(HttpStatus.OK);
 	}
 }
