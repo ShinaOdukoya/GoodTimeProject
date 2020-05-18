@@ -8,8 +8,10 @@ import com.goodTime.model.Movie;
 
 public interface MovieService {
 	
-	List<Movie> createPlaylist(UUID userId,Long id);
+	
 	List<Movie> fetchAllMovies();
-	Movie findById(Long id);
+	Movie findMovieById(Long id);
+	Movie updateMovie(Long id, Movie movie);
+	void deleteMovieById(Long id);
 	void addMovie(Movie movie);
 }

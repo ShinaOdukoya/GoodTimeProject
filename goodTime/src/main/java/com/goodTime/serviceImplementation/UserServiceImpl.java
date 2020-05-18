@@ -25,6 +25,9 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private MovieRepository movieRepository;
 	
+	@Autowired
+	private UserServiceImpl userServiceImpl;
+	
 	
 	// Registers new users
 	@Override
@@ -69,6 +72,8 @@ public class UserServiceImpl implements UserService{
 	//Updates an existing user
 	@Override
 	public User updateUser(UUID id, User user) {
+		user = findUserById(id);
+		
 		return userRepository.saveAndFlush(user);
 	}
 	
@@ -84,27 +89,35 @@ public class UserServiceImpl implements UserService{
 		User user = userRepository.getOne(userId);
 		
 		List<Movie> movieplaylist = new ArrayList<>();
-		
-		if(movieRepository.existsById(id)) {
 			
 			
 			List<Movie> allMovies = movieRepository.findAll();
-			for (Movie movie : allMovies ) {
-				
-				movieplaylist.add(movie);
-				
-			}
-
-				user.setMovies(movieplaylist);
-				
-				
 			
-		}
+			for(Movie movie : allMovies) {
+				
+				movie = movieRepository.getOne(id);
+				
+				 
+				 if(movieplaylist.contains(movie)) {
+					
+					 user.getMovies();
+					 
+				 }else {
+					 movieplaylist.add(movie);
+				
+				 }
+				 
+				 user.setMovies(movieplaylist);
+			
+				 userRepository.save(user);
+				
+				 
+			 
+						
+			}	 
+			 
 		
-		
-		
-		
-		return userRepository.save(user);
+		return userRepository.saveAndFlush(user);
 		
 		
 		

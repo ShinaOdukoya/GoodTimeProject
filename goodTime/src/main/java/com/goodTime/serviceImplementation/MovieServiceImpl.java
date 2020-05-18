@@ -1,17 +1,16 @@
 package com.goodTime.serviceImplementation;
 
-import java.util.ArrayList;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.goodTime.exception.NotFoundException;
 import com.goodTime.model.Movie;
 import com.goodTime.model.User;
 import com.goodTime.repository.MovieRepository;
-import com.goodTime.repository.UserRepository;
 import com.goodTime.service.MovieService;
 
 @Service
@@ -20,8 +19,7 @@ public class MovieServiceImpl implements MovieService {
 	@Autowired
 	private MovieRepository movieRepository;
 	
-	@Autowired
-	private UserRepository userRepository;
+
 	
 	
 	@Override
@@ -36,34 +34,46 @@ public class MovieServiceImpl implements MovieService {
 	}
 	
 	@Override
-	public Movie findById(Long id) {
+	public Movie findMovieById(Long id) {
 		
-		return movieRepository
-				.findById(id)
-				.orElseThrow(() -> new NotFoundException("Movie with ID " + id + " not found!"));
+		if(movieRepository.findById(id).isPresent()) {
+			
+			return movieRepository.getOne(id);
+			
+		}else {
+			
+			return null;
+		}
 	}
 	
 	@Override
-	public List<Movie> createPlaylist(UUID userId, Long id){
+	public Movie updateMovie(Long id, Movie movie) {
 		
-		List<Movie> movies = fetchAllMovies();
-		
-		User user = userRepository.getOne(userId);
-		
-		List<Movie> movieplaylist = new ArrayList<>();
-		
-		
-		
-		
-		
-		user.setMovies(movieplaylist);
-		
-		userRepository.save(user);
-		
-		return movies;
-		
+		if(movieRepository.findById(id).isPresent()) {
+			
+			Movie existingMovie = movieRepository.findById(id).get();
+			
+			existingMovie.setTitle(movie.getTitle());
+			
+			existingMovie.setDescription(movie.getDescription());
+			
+			Movie newMovie = movieRepository.save(existingMovie);
+			
+			return newMovie;
+		}else {
+			throw new NotFoundException("Movie with ID"+id+ "does not exist");
+			
+		}
 	
-		
 	}
+	
+	@Override
+	public void deleteMovieById(Long id) {
+		if(movieRepository.findById(id).isEmpty())
+			throw new NotFoundException("Movie with ID "+id+" does not exist!");
+		movieRepository.deleteById(id);
+	}
+	
+
 
 }

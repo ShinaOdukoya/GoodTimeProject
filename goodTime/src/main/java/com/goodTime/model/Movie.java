@@ -16,9 +16,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.JoinColumn;
-
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name="movies")
 public class Movie {
@@ -38,7 +39,7 @@ public class Movie {
 	private String description;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	@JsonIgnore
 	private User user;
 	
@@ -88,6 +89,7 @@ public class Movie {
 
 	public void setUser(User user) {
 		this.user = user;
+		
 	}
 
 	public void setMovieCategories(List<MovieCategory> movieCategories) {

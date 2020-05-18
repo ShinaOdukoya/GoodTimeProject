@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Client Data Transfer Object with accessors and mutators
 */
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name="users")
 public class User {
@@ -202,6 +203,7 @@ public class User {
 
 	public void setMovies(List<Movie> movies) {
 		this.movies = movies;
+		
 	}
 	
 	
