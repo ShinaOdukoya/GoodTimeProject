@@ -1,6 +1,8 @@
 package com.goodTime.controller;
 
 import java.util.List;
+import org.springframework.security.core.Authentication;
+
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -20,7 +22,7 @@ import com.goodTime.model.User;
 import com.goodTime.serviceImplementation.UserServiceImpl;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("api/user")
 public class UserController {
 	
 	@Autowired
@@ -37,6 +39,15 @@ public class UserController {
 		List<User> allUsers = userService.findAllUsers();
 		return new ResponseEntity <List<User>> (allUsers, HttpStatus.OK);
 	}
+	
+	//Get User by by Access Token
+	@GetMapping("/token")
+	public ResponseEntity<Object> getUserByAccessToken(Authentication auth){
+		
+		return new ResponseEntity<>(auth, HttpStatus.OK);
+		
+	}
+	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity <User> getUser(@PathVariable("id") UUID id){

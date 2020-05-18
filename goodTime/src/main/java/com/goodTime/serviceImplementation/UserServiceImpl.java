@@ -1,15 +1,18 @@
 package com.goodTime.serviceImplementation;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.goodTime.exception.BadRequestException;
 import com.goodTime.exception.NotFoundException;
+import com.goodTime.model.Role;
 import com.goodTime.model.User;
+import com.goodTime.repository.RoleRepository;
 import com.goodTime.repository.UserRepository;
 import com.goodTime.service.UserService;
 
@@ -19,12 +22,21 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private RoleRepository roleRepository;
+	
 	
 	// Registers new users
 	@Override
 	public void registerUser(User user) {
 		if(userRepository.findByEmailAddress(user.getEmailAddress()) != null)
 			throw new BadRequestException("User email "+user.getEmailAddress()+" already exist!");
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		Role role = roleRepository.findById((long) 3).get();
+		user.setRoles(Arrays.asList(role));		
 		userRepository.save(user);
 	}
 	
@@ -69,5 +81,10 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void sendConfirmationMail(User user) {
 		
+	}
+
+	@Override
+	public User findUserByEmailAddressOrUserName(String usernameOrEmail) {
+		return userRepository.findByUsername(usernameOrEmail);
 	}
 }

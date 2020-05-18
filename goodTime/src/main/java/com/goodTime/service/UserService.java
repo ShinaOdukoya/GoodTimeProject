@@ -13,5 +13,6 @@ public interface UserService {
 	User updateUser(UUID id, User user);
 	User findUserByEmailAddress(String emailAddress);
 	User findUserById(UUID id);
+	User findUserByEmailAddressOrUserName(String usernameOrEmail);
 	List<User> findAllUsers();
 }
