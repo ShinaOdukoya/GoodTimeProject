@@ -1,4 +1,4 @@
-package com.goodTime.demainobject;
+package com.goodTime.domainobject;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,11 +11,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
+@Service
 public class JWTokenGenerator {
 
 	private static final long EXPIRATION_TIME = 864_000_000; // 1 Day in milli seconds
@@ -23,7 +24,7 @@ public class JWTokenGenerator {
 	private static final String PREFIX = "Bearer";
 
 	// Add token to Authorization header
-	public static void addToken(HttpServletResponse res, Authentication auth) {
+	public static String addToken(HttpServletResponse res ,Authentication auth) {
 
 		Claims claims = Jwts.claims().setSubject(auth.getName());
 		String authorities = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority)
@@ -37,6 +38,7 @@ public class JWTokenGenerator {
 
 		res.addHeader("Authorization", PREFIX + " " + JwtToken);
 		res.addHeader("Access-Control-Expose-Headers", "Authorization");
+		return JwtToken;
 
 	}
 

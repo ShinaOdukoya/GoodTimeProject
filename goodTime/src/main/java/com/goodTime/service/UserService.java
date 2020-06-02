@@ -1,7 +1,6 @@
 package com.goodTime.service;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.goodTime.model.User;
 
@@ -9,10 +8,10 @@ public interface UserService {
 	
 	void registerUser(User user);
 	void sendConfirmationMail(User user);
-	void deleteUserById(UUID id);
-	User updateUser(UUID id, User user);
+	void deleteUserById(long id);
+	User updateUser(long id, User user);
 	User findUserByEmailAddress(String emailAddress);
-	User findUserById(UUID id);
+	User findUserById(long id);
 	User findUserByEmailAddressOrUserName(String usernameOrEmail);
 	List<User> findAllUsers();
 }

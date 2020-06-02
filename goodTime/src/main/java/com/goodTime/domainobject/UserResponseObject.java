@@ -1,8 +1,7 @@
-package com.goodTime.demainobject;
+package com.goodTime.domainobject;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.data.rest.core.config.Projection;
 
@@ -12,7 +11,7 @@ import com.goodTime.model.User;
 @Projection(name="userDetails", types= {User.class})
 public interface UserResponseObject {
 	
-	UUID getId();
+	long getId();
 	String getName();
 	String getEmailAddress();
 	String getPhoneNumber();

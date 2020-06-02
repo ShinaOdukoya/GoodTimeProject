@@ -1,45 +1,40 @@
 package com.goodTime.serviceImplementation;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.goodTime.model.User;
+import com.goodTime.repository.UserRepository;
+import com.goodTime.securityconfiguration.UserPrincipal;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Autowired
-	private UserServiceImpl userService;
+	private UserRepository userRepository;
 
-	@Override
-	public UserDetails loadUserByUsername(String emailAddress) throws UsernameNotFoundException {
+	
+	 @Override
+	    @Transactional
+	    public UserDetails loadUserByUsername(String email)
+	            throws UsernameNotFoundException {
+	        User user = userRepository.findByEmailAddress(email)
+	                .orElseThrow(() ->
+	                        new UsernameNotFoundException("User not found with email : " + email)
+	        );
 
-		User user = userService.findUserByEmailAddressOrUserName(emailAddress);
-		if (user == null)
-			throw new UsernameNotFoundException("User with " + emailAddress + " not found");
+	        return UserPrincipal.create(user);
+	    }
 
-		return new org.springframework.security.core.userdetails.User(user.getUserName(), user.getPassword(),
-				getAuthorities(user));
+	    @Transactional
+	    public UserDetails loadUserByEmail(String email) {
+	        User user = userRepository.findByUsername(email);
 
-	}
-
-	private Collection<GrantedAuthority> getAuthorities(User user) {
-
-		Set<GrantedAuthority> authorities = new HashSet<>();
-		user.getRoles().forEach(role -> {
-			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
-		});
-		return authorities;
-
-	}
-
+	        return UserPrincipal.create(user);
+	    }
+	    
 }

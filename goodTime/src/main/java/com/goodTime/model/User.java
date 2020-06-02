@@ -1,94 +1,93 @@
 package com.goodTime.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
-import javax.persistence.CascadeType;
+import java.util.Collection;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 /**
  * Client Data Transfer Object with accessors and mutators
-*/
+ */
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User {
-	
+
 	@Id
-	@GeneratedValue
-	@Type(type="org.hibernate.type.UUIDCharType")
-	private UUID id;
-	
-	@Column(name="name")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private long id;
+
+	@Column(name = "name")
 	@NotNull
 	private String name;
-	
-	@Column(name="userName")
+
+	private String imageUrl;
+
 	@NotNull
+	@Enumerated(EnumType.STRING)
+	private AuthProvider provider;
+
+	@Column(name = "userName")
 	private String userName;
-	
-	@Column(name="businessName")
+
+	@Column(name = "businessName")
 	private String businessName;
-	
-	@Column(name="emailAddress", unique=true, nullable=false)
+
+	@Column(name = "emailAddress", unique = true, nullable = false)
 	@Email
 	@NotNull
 	private String emailAddress;
-	
+
 	@Column(name = "phoneNumber")
-	@NotNull
+//	@NotNull
 	private String phoneNumber;
-	
+
 	@Column(name = "password")
 	private String password;
-	
+
 	@Column(name = "address")
 	private String address;
-	
+
 	@Column(name = "isBusinessOwner", columnDefinition = "TINYINT")
 	private boolean isBusinessOwner;
-	
+
 	@Column(name = "isActivated", columnDefinition = "TINYINT")
 	private boolean isActivated;
-	
+
 	@Column(name = "isAdmin", columnDefinition = "TINYINT")
 	private boolean isAdmin;
-	
-	@Column(name= "lastLogin")
+
+	@Column(name = "lastLogin")
 	private LocalDateTime lastLogIn;
-	
+
 	@CreationTimestamp
 	@Column(name = "joinedAt")
 	private LocalDateTime joinedAt;
-	
+
+	private String providerId;
+
 	@UpdateTimestamp
 	@Column(name = "updatedAt")
 	private LocalDateTime updatedAt;
-	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@ElementCollection
-	private List<Role> roles;
 
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(UUID id) {
-		this.id = id;
-	}
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	private Collection<Role> roles;
 
 	public String getName() {
 		return name;
@@ -145,7 +144,7 @@ public class User {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	public boolean isBusinessOwner() {
 		return isBusinessOwner;
 	}
@@ -193,11 +192,44 @@ public class User {
 	public void setUpdatedAt(LocalDateTime updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	public List<Role> getRoles() {
+
+	public Collection<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Collection<Role> roles) {
 		this.roles = roles;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public AuthProvider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(AuthProvider provider) {
+		this.provider = provider;
+	}
+
+	public String getProviderId() {
+		return providerId;
+	}
+
+	public void setProviderId(String providerId) {
+		this.providerId = providerId;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 }

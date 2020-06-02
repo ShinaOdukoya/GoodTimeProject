@@ -2,7 +2,6 @@ package com.goodTime.serviceImplementation;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,7 +34,7 @@ public class UserServiceImpl implements UserService{
 		if(userRepository.findByEmailAddress(user.getEmailAddress()) != null)
 			throw new BadRequestException("User email "+user.getEmailAddress()+" already exist!");
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		Role role = roleRepository.findById((long) 3).get();
+		Role role = roleRepository.findRoleByName("ROLE_USER");
 		user.setRoles(Arrays.asList(role));		
 		userRepository.save(user);
 	}
@@ -53,12 +52,12 @@ public class UserServiceImpl implements UserService{
 	public User findUserByEmailAddress(String emailAddress) {
 		if(userRepository.findByEmailAddress(emailAddress) == null)
 			throw new NotFoundException("User email "+emailAddress+" not found!");
-		return userRepository.findByEmailAddress(emailAddress);
+		return userRepository.findByEmailAddress(emailAddress).get();
 	}
 		
 	// Returns an existing user by its ID
 	@Override
-	public User findUserById(UUID id) {
+	public User findUserById(long id) {
 		return userRepository
 				.findById(id)
 				.orElseThrow(() -> new NotFoundException("User with ID " + id + " not found!"));
@@ -66,7 +65,7 @@ public class UserServiceImpl implements UserService{
 		
 	//Deletes an existing user by its ID
 	@Override
-	public void deleteUserById(UUID id) {
+	public void deleteUserById(long id) {
 		if(userRepository.findById(id).isEmpty())
 			throw new NotFoundException("User with ID "+id+" does not exist!");
 		userRepository.deleteById(id);
@@ -74,7 +73,7 @@ public class UserServiceImpl implements UserService{
 	
 	//Updates an existing user
 	@Override
-	public User updateUser(UUID id, User user) {
+	public User updateUser(long id, User user) {
 		return userRepository.saveAndFlush(user);
 	}
 	

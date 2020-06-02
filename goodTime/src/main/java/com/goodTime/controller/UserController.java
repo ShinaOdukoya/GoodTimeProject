@@ -1,62 +1,28 @@
 package com.goodTime.controller;
 
-import java.util.List;
-import org.springframework.security.core.Authentication;
-
-import java.util.UUID;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.goodTime.model.User;
-import com.goodTime.serviceImplementation.UserServiceImpl;
+import com.goodTime.repository.UserRepository;
 
 @RestController
-@RequestMapping("api/user")
+@RequestMapping("/user")
 public class UserController {
-	
-	@Autowired
-	private UserServiceImpl userService;
-	
-	@PostMapping("/")
-	public ResponseEntity<Object> registerNewClient(@RequestBody @Valid User user) {
-		userService.registerUser(user);
-		return new ResponseEntity<>(user, HttpStatus.CREATED);
-	}
-	
-	@GetMapping("/")
-	public ResponseEntity <List<User>> getUsers(){
-		List<User> allUsers = userService.findAllUsers();
-		return new ResponseEntity <List<User>> (allUsers, HttpStatus.OK);
-	}
-	
-	//Get User by by Access Token
-	@GetMapping("/token")
-	public ResponseEntity<Object> getUserByAccessToken(Authentication auth){
-		
-		return new ResponseEntity<>(auth, HttpStatus.OK);
-		
-	}
-	
-	
-	@GetMapping("/{id}")
-	public ResponseEntity <User> getUser(@PathVariable("id") UUID id){
-		return new ResponseEntity <User> (userService.findUserById(id), HttpStatus.OK);
-	}
-	
-	@DeleteMapping("/{id}")
-	public ResponseEntity <Object> deleteUser(@PathVariable("id") UUID id){
-		userService.deleteUserById(id);
-		return new ResponseEntity<Object>(HttpStatus.OK);
-	}
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Object> getByToken(Authentication auth){
+    	
+    	return new ResponseEntity<>(userRepository.findByEmailAddress(auth.getName()), HttpStatus.OK);
+    }
 }

@@ -1,4 +1,4 @@
-package com.goodTime.demainobject;
+package com.goodTime.domainobject;
 
 public class LoginCredentials {
 	
